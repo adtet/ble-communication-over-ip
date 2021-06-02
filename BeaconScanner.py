@@ -2,7 +2,10 @@
 
 import ScanUtility
 import bluetooth._bluetooth as bluez
-from sqllib import input_data
+import requests
+
+url = "http://ipraspberry:port/path" # raspberry sentral
+
 #Set bluetooth device. Default 0.
 dev_id = 0
 try:
@@ -19,7 +22,8 @@ try:
 		returnedList = ScanUtility.parse_events(sock, 10)
 		for item in returnedList:
 			print(item)
-			input_data(item['type'],item['uuid'],item['major'],item['minor'],item['rssi'],item['macAddress'])
+			item['ruangan']=1 #bisa dicustom aja
+			x = requests.post(url,item)
 			print("")
 except KeyboardInterrupt:
     pass
