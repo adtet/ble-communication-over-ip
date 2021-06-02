@@ -7,7 +7,7 @@ def koneksi_sql():
     sql = mysql.connector.connect(host="localhost",
                                   user="root",
                                   password="",
-                                  database="db_optima")
+                                  database="db_ble")
     return sql
  
 
