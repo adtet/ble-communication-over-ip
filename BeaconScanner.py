@@ -2,7 +2,7 @@
 
 import ScanUtility
 import bluetooth._bluetooth as bluez
-
+from sqllib import input_data
 #Set bluetooth device. Default 0.
 dev_id = 0
 try:
@@ -19,6 +19,7 @@ try:
 		returnedList = ScanUtility.parse_events(sock, 10)
 		for item in returnedList:
 			print(item)
+			input_data(item['type'],item['uuid'],item['major'],item['minor'],item['rssi'],item['macAddress'])
 			print("")
 except KeyboardInterrupt:
     pass
