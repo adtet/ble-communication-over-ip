@@ -24,6 +24,7 @@ try:
 			print(item)
 			item['ruangan']=1 #bisa dicustom aja
 			x = requests.post(url,item)
+			print(x)
 			print("")
 except KeyboardInterrupt:
     pass

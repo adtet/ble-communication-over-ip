@@ -1,5 +1,5 @@
 from flask import request,Flask,jsonify
-from sqlib_sentral import input_data
+from sqlib_sentral import input_data,cek_data_ble,update_table_data
 
 app = Flask(__name__)
 
@@ -23,13 +23,18 @@ def data_input():
             rssi = json_data['rssi']
             mac_address = json_data['mac_address']
             ruangan = json_data['ruangan']
-            input_data(type_ble,uuid,major,minor,rssi,mac_address,ruangan)
-            result = {"message": "Input success"}
-            resp = jsonify(result)
-            return resp, 200
+            cek = cek_data_ble(uuid)
+            if cek==False:
+                update_table_data(type_ble,major,minor,rssi,mac_address,ruangan,uuid)
+                result = {"message": "Update success"}
+                resp = jsonify(result)
+                return resp, 200
+            else:
+                input_data(type_ble,uuid,major,minor,rssi,mac_address,ruangan)
+                result = {"message": "Input success"}
+                resp = jsonify(result)
+                return resp, 202
             
-
-
 if __name__ == "__main__":
     # serve(app, host="0.0.0.0", port=6000)
     app.run(port=6000, debug=True)
