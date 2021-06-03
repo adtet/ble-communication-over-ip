@@ -30,9 +30,9 @@ def cek_data_ble(uuid):
         print(e)
         c = None
     if c==None:
-        return False
-    else:
         return True
+    else:
+        return False
     
 
 def update_table_data(type_ble,major,minor,rssi,mac_address,ruangan,uuid):
