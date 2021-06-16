@@ -21,10 +21,11 @@ try:
 	while True:
 		returnedList = ScanUtility.parse_events(sock, 10)
 		for item in returnedList:
-			print(item)
 			item['ruangan']=1 #bisa dicustom aja
-			x = requests.post(url,item)
+			print(item)
+			x = requests.post(url,json=item)
 			print(x)
+			print(x.text)
 			print("")
 except KeyboardInterrupt:
     pass
