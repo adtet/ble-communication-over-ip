@@ -1,5 +1,5 @@
 from flask import request,Flask,jsonify
-from sqlib_sentral import input_data,cek_data_ble,update_table_data
+from sqlib_sentral import input_data,cek_data_ble,update_table_data,cek_room,cek_room_base_uuid
 
 app = Flask(__name__)
 
@@ -25,16 +25,42 @@ def data_input():
             ruangan = json_data['ruangan']
             cek = cek_data_ble(uuid)
             if cek==False:
-                update_table_data(type_ble,major,minor,rssi,mac_address,ruangan,uuid)
-                result = {"message": "Update success"}
-                resp = jsonify(result)
-                return resp, 200
+                cek_ruangan = cek_room(uuid,ruangan)
+                if cek_ruangan==False:
+                    status = "forbidden"
+                    update_table_data(type_ble,major,minor,rssi,mac_address,ruangan,uuid,status)
+                    result = {"message": "Update success",
+                              "status":status}
+                    resp = jsonify(result)
+                    return resp, 203
+                else:
+                    status = "allow"
+                    update_table_data(type_ble,major,minor,rssi,mac_address,ruangan,uuid,status)
+                    result = {"message": "Update success",
+                              "status":status}
+                    resp = jsonify(result)
+                    return resp, 200                        
             else:
-                input_data(type_ble,uuid,major,minor,rssi,mac_address,ruangan)
-                result = {"message": "Input success"}
-                resp = jsonify(result)
-                return resp, 202
-            
+                cek_ruangan = cek_room_base_uuid(uuid)
+                if cek_ruangan==False:
+                    result = {"message": "Forbidden device"}
+                    resp = jsonify(result)
+                    return resp, 403
+                else:
+                    cek_ruangan_lagi = cek_room(uuid,ruangan)
+                    if cek_ruangan_lagi==False:
+                        status = "forbidden"
+                        input_data(type_ble,uuid,major,minor,rssi,mac_address,ruangan,status)
+                        result = {"message": "Input success"}
+                        resp = jsonify(result)
+                        return resp, 202
+                    else:
+                        status = "allow"
+                        input_data(type_ble,uuid,major,minor,rssi,mac_address,ruangan,status)
+                        result = {"message": "Input success"}
+                        resp = jsonify(result)
+                        return resp, 202
+                        
 if __name__ == "__main__":
     # serve(app, host="0.0.0.0", port=6000)
     app.run(port=6000, debug=True)
